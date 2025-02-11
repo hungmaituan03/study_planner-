@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+dotenv
+openai
+PyMuPDF
+python-pptx
+SQLAlchemy
+psycopg2-binary
+python_pptx
