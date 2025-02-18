@@ -1,13 +1,14 @@
-// frontend/src/App.js
 import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import axios from "axios";
+import StudyPlanPage from "./pages/StudyPlanPage";
 
-function App() {
+function Home() {
   const [file, setFile] = useState(null);
   const [extractedText, setExtractedText] = useState("");
-  const [studyPlan, setStudyPlan] = useState(null);
   const [studyTime, setStudyTime] = useState("");
   const [deadline, setDeadline] = useState("");
+  const navigate = useNavigate();
 
   const handleFileUpload = async (e) => {
     e.preventDefault();
@@ -31,7 +32,7 @@ function App() {
         study_time: parseInt(studyTime),
         deadline,
       });
-      setStudyPlan(response.data.study_plan);
+      navigate("/study-plan", { state: { studyPlan: response.data.study_plan } });
     } catch (error) {
       console.error("Error generating study plan:", error);
     }
@@ -64,13 +65,18 @@ function App() {
         />
         <button onClick={handleGeneratePlan}>Generate Study Plan</button>
       </div>
-      {studyPlan && (
-        <div>
-          <h2>Study Plan:</h2>
-          <pre>{studyPlan}</pre>
-        </div>
-      )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/study-plan" element={<StudyPlanPage />} />
+      </Routes>
+    </Router>
   );
 }
 
