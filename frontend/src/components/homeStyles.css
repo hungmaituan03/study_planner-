@@ -1,0 +1,40 @@
+.home-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .file-upload-container {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    cursor: pointer;
+  }
+  
+  .progress-container {
+    width: 100%;
+    background: #ddd;
+  }
+  
+  .progress-bar {
+    height: 5px;
+    background: #4caf50;
+  }
+  
+  .study-plan-form {
+    margin-top: 20px;
+  }
+  
+  .study-plan-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .study-plan-table th, .study-plan-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .study-plan-table th {
+    background: #f4f4f4;
+  }
+  

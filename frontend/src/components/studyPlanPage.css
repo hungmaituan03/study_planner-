@@ -1,0 +1,33 @@
+.study-plan-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .week {
+    margin-bottom: 20px;
+  }
+  
+  .day {
+    margin-left: 20px;
+  }
+  
+  .task {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .study-plan-container {
+      padding: 10px;
+    }
+  
+    .week, .day, .task {
+      font-size: 14px;
+    }
+  }
+  
