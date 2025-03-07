@@ -1,37 +1,75 @@
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+import json
 
+# Load environment variables
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def calculate_days_until_deadline(deadline):
-    """Calculate the number of days available until the given deadline."""
-    today = datetime.today().date()
-    deadline_date = datetime.strptime(deadline, "%Y-%m-%d").date()
-    available_days = (deadline_date - today).days
-    return max(available_days, 1)  # Ensure at least 1 day
-
-def generate_study_plan(text, study_time, deadline):
-    """Generate a structured study plan based on study material, study time, and deadline."""
-    
-    available_days = calculate_days_until_deadline(deadline)
-    hours_per_day = round(study_time / available_days, 2)
-
+def generate_study_plan_ui(text, deadline, studyTime):
     prompt = f"""
-    Given the following study material:
-    {text}
-    Generate a study plan, knowing that I have {hours_per_day} hours to study starting from today and have {available_days} days left to study.
+    You are a study planner. Make a UI study planner based on the input below:
+    I am a student who wants to study this material: {text}. 
+    I dedicate {studyTime} hours per day for {deadline} days. 
     """
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-2024-08-06",
         messages=[
-            {"role": "system", "content": "Generate a structured, time-bound study plan strictly following the user's constraints."},
+            {"role": "system", "content": "You are a UI generator AI. Convert the study plan into a structured UI."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=500
+        response_format={
+            "type": "object",
+            "properties": {
+                "courseTitle": {
+                    "type": "string",
+                    "description": "The title of the course, e.g., 'CS 351: Introduction to Cyber Security Study Plan'."
+                },
+                "assignments": {
+                    "type": "array",
+                    "description": "A list of assignments for the course.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "assignmentNumber": {
+                                "type": "string",
+                                "description": "The identifier for the assignment, e.g., 'Assignment 1'."
+                            },
+                            "goal": {
+                                "type": "string",
+                                "description": "The goal or objective of the assignment."
+                            },
+                            "tasks": {
+                                "type": "array",
+                                "description": "A list of tasks to complete for the assignment.",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "description": {
+                                            "type": "string",
+                                            "description": "A detailed description of the task."
+                                        },
+                                        "studyTime": {
+                                            "type": "string",
+                                            "description": "The recommended time to spend on the task, e.g., '45 minutes'."
+                                        }
+                                    },
+                                    "required": ["description", "studyTime"]
+                                }
+                            }
+                        },
+                        "required": ["assignmentNumber", "goal", "tasks"]
+                    }
+                }
+            },
+            "required": ["courseTitle", "assignments"]
+        },
+        temperature=0,
+        top_p=0,
+        max_tokens=2000
     )
-    
-    return response.choices[0].message.content
+
+    output = json.loads(response.choices[0].message.content)
+    return output

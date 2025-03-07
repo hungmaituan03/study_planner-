@@ -116,11 +116,11 @@ function Home() {
           onChange={(e) => setStudyTime(e.target.value)}
         />
 
-        <label>Deadline</label>
+        <label>Days Left to Study</label>
         <input
-          type="date"
+          type="number"
           value={deadline}
-          min={new Date().toISOString().split("T")[0]} // Prevent past dates
+          min="1"
           onChange={(e) => setDeadline(e.target.value)}
         />
 
